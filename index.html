@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Minfet Game Hub</title>
+<style>
+:root{--bg:#070a12;--panel:#0d1422;--panel2:#111b2d;--line:#243553;--text:#f7f9ff;--muted:#9aa8bd;--blue:#4388ff;--cyan:#35d7ff;--green:#4de0a0}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 80% 0,#173d6a55,transparent 28%),radial-gradient(circle at 10% 20%,#402a7a33,transparent 24%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+a{text-decoration:none;color:inherit}.nav{position:sticky;top:0;z-index:50;background:#080c15e8;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff12}.navin{max-width:1200px;margin:auto;padding:15px 20px;display:flex;align-items:center;gap:20px}.logo{font-weight:950;font-size:22px;white-space:nowrap}.logo span{color:var(--cyan)}.search{flex:1;max-width:400px;margin-left:auto;background:#111b2b;border:1px solid var(--line);border-radius:11px;padding:11px 14px;color:#fff}.links{display:flex;gap:17px;font-weight:800;font-size:14px}.links a:hover{color:var(--cyan)}
+.wrap{max-width:1200px;margin:auto;padding:25px 20px 70px}.hero{min-height:470px;border:1px solid var(--line);border-radius:24px;padding:55px;display:flex;align-items:center;overflow:hidden;background:linear-gradient(90deg,#060a12 0%,#060a12df 42%,#060a1260),url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1800&q=85') center/cover}.pill{display:inline-block;padding:7px 11px;border-radius:99px;background:#35d7ff12;border:1px solid #35d7ff44;color:#75e4ff;font-size:12px;font-weight:900}.hero h1{font-size:clamp(46px,7vw,82px);line-height:.94;margin:17px 0}.hero h1 span{background:linear-gradient(90deg,var(--blue),var(--cyan));-webkit-background-clip:text;color:transparent}.hero p{max-width:620px;color:#c3ccda;font-size:18px;line-height:1.7}.btn{display:inline-block;background:linear-gradient(135deg,#3979ff,#24c8ff);padding:12px 18px;border-radius:10px;font-weight:900;box-shadow:0 12px 30px #168cff22}.btn.alt{background:#ffffff08;border:1px solid var(--line);box-shadow:none;margin-left:7px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.stat{background:#0d1422;border:1px solid #ffffff10;border-radius:13px;padding:16px}.stat b{display:block}.stat small{color:var(--muted)}
+.section{padding-top:58px}.sectionhead{display:flex;align-items:end;justify-content:space-between;margin-bottom:18px}.sectionhead h2{margin:0;font-size:30px}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:17px}.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:.2s}.card:hover{transform:translateY(-5px);border-color:#4388ff77;box-shadow:0 18px 45px #0006}.cover{height:190px;background-color:#111a29;background-size:cover;background-position:center}.body{padding:15px}.tag{display:inline-block;font-size:10px;font-weight:950;color:#75e4ff;background:#35d7ff12;border:1px solid #35d7ff33;padding:4px 7px;border-radius:6px}.body h3{margin:9px 0 3px}.price{font-size:21px;font-weight:950;margin:12px 0}.old{text-decoration:line-through;color:#68758b;font-size:13px;margin-left:5px}.buy{width:100%;text-align:center;padding:10px}.service{padding:22px}.icon{font-size:30px}.service h3{margin:11px 0 5px}
+.notice{margin-top:22px;padding:17px 19px;background:#101a2a;border:1px solid #2a3e5e;border-radius:13px;color:#bdc8d8}.paypal{display:inline-block;margin-top:12px;background:#ffc439;color:#111;padding:12px 20px;border-radius:9px;font-weight:950}.account{padding:24px;background:linear-gradient(135deg,#121d31,#0d1422);border:1px solid var(--line);border-radius:17px}.contact{display:grid;grid-template-columns:1fr 1fr;gap:18px}.box{padding:24px;background:var(--panel);border:1px solid var(--line);border-radius:16px}.email{color:#72ddff;font-weight:800}.discord{color:#aaa0ff;font-weight:800}footer{border-top:1px solid #ffffff10;text-align:center;padding:30px;color:#69778d}
+@media(max-width:800px){.navin{flex-wrap:wrap}.search{order:3;flex-basis:100%;max-width:none}.links{display:none}.hero{padding:32px}.stats{grid-template-columns:1fr 1fr}.contact{grid-template-columns:1fr}}
+
+.cartBtn{margin-top:8px;background:#172238;border:1px solid #334968;box-shadow:none;cursor:pointer}
+.cartDrawer{position:fixed;right:18px;top:78px;width:min(390px,calc(100% - 36px));background:#0d1422;border:1px solid #2b3e5d;border-radius:16px;padding:20px;z-index:100;box-shadow:0 20px 60px #0009;display:none}
+.cartDrawer.show{display:block}.cartItem{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #ffffff10}.cartTotal{font-size:22px;font-weight:950;margin:15px 0}
+
+</style>
+</head>
+<body>
+<header class="nav"><nav class="navin">
+<div class="logo">MINFET <span>GAME HUB</span></div>
+<input id="gameSearch" class="search" placeholder="🔎 Search games..." autocomplete="off" oninput="searchGames()">
+<div class="links"><a href="#openworld">Games</a><a href="#services">Services</a><a href="#support">Support</a><button id="cartToggle" style="background:#111b2b;color:#fff;border:1px solid #2b3c5b;border-radius:10px;padding:9px 12px;font-weight:900;cursor:pointer">🛒 Cart (<span id="cartCount">0</span>)</button></div>
+</nav></header>
+
+
+<div id="cartDrawer" class="cartDrawer">
+<h3>🛒 Shopping Cart</h3>
+<div id="cartItems"><p class="muted">Your cart is empty.</p></div>
+<div class="cartTotal">Total: $<span id="cartTotal">0.00</span></div>
+<a id="cartCheckout" class="btn" href="buy.html">CHECKOUT</a>
+</div>
+<main class="wrap">
+<section class="hero">
+<div><span class="pill">🎮 MINFET GAME HUB</span><h1>LEVEL UP.<br><span>SPEND LESS.</span></h1><p>Game deals, gaming support and a clean place to discover your next favorite game.</p><a class="btn" href="#openworld">EXPLORE GAMES</a><a class="btn alt" href="#support">CONTACT US</a></div>
+</section>
+<div class="stats">
+<div class="stat">⚡ <b>Fast Support</b><small>Gaming help</small></div>
+<div class="stat">💎 <b>Low Prices</b><small>Example deals</small></div>
+<div class="stat">🛠️ <b>Game Help</b><small>Fix common issues</small></div>
+<div class="stat">💬 <b>Easy Contact</b><small>Discord & email</small></div>
+</div>
+
+
+<section class="section" id="openworld"><div class="sectionhead"><div><h2>🌎 Open World</h2><p class="muted">Big worlds, exploration and adventure.</p></div></div>
+<div class="grid">
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/271590/header.jpg')"></div><div class="body"><span class="tag">DEAL</span><h3>Grand Theft Auto V</h3><div class="price">$9.99</div><a class="btn buy" href="buy.html?game=Game%20Listing&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Game Listing" data-price="9.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/1174180/header.jpg')"></div><div class="body"><span class="tag">POPULAR</span><h3>Red Dead Redemption 2</h3><div class="price">$19.99</div><a class="btn buy" href="buy.html?game=Game%20Listing&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Game Listing" data-price="9.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/1672970/header.jpg')"></div><div class="body"><span class="tag">BUILD</span><h3>Minecraft</h3><div class="price">$14.99</div><a class="btn buy" href="buy.html?game=Game%20Listing&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Game Listing" data-price="9.99">ADD TO CART</button></div></article>
+
+</div></section>
+
+<section class="section" id="survival"><div class="sectionhead"><div><h2>🏕️ Survival</h2><p class="muted">Craft, build and survive.</p></div></div>
+<div class="grid">
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/648800/header.jpg')"></div><div class="body"><span class="tag">SURVIVAL</span><h3>Raft</h3><div class="price">$14.99</div><a class="btn buy" href="buy.html?game=Game%20Listing&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Game Listing" data-price="9.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/945360/header.jpg')"></div><div class="body"><span class="tag">SOCIAL</span><h3>Among Us</h3><div class="price">$4.99</div><a class="btn buy" href="buy.html?game=Game%20Listing&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Game Listing" data-price="9.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=900&q=85')"></div><div class="body"><span class="tag">SURVIVAL</span><h3>Survival Game Listing</h3><div class="price">$9.99</div><a class="btn buy" href="buy.html?game=Game%20Listing&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Game Listing" data-price="9.99">ADD TO CART</button></div></article>
+</div></section>
+
+
+<section class="section" id="horror"><div class="sectionhead"><div><h2>👻 Horror Games</h2><p class="muted">Real horror games with game artwork.</p></div></div>
+<div class="grid">
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/381210/header.jpg')"></div><div class="body"><span class="tag">HORROR</span><h3>Dead by Daylight</h3><div class="price">$19.99</div><a class="btn buy" href="buy.html?game=Dead%20by%20Daylight&price=19.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Dead by Daylight" data-price="19.99">ADD TO CART</button><button class="btn buy cartBtn" data-game="Dead by Daylight" data-price="19.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/739630/header.jpg')"></div><div class="body"><span class="tag">HORROR</span><h3>Phasmophobia</h3><div class="price">$13.99</div><a class="btn buy" href="buy.html?game=Phasmophobia&price=13.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Phasmophobia" data-price="13.99">ADD TO CART</button><button class="btn buy cartBtn" data-game="Phasmophobia" data-price="13.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/883710/header.jpg')"></div><div class="body"><span class="tag">SURVIVAL HORROR</span><h3>Resident Evil 2</h3><div class="price">$19.99</div><a class="btn buy" href="buy.html?game=Resident%20Evil%202&price=19.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Resident Evil 2" data-price="19.99">ADD TO CART</button><button class="btn buy cartBtn" data-game="Resident Evil 2" data-price="19.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/238320/header.jpg')"></div><div class="body"><span class="tag">HORROR</span><h3>Outlast</h3><div class="price">$9.99</div><a class="btn buy" href="buy.html?game=Outlast&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Outlast" data-price="9.99">ADD TO CART</button><button class="btn buy cartBtn" data-game="Outlast" data-price="9.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/1944430/header.jpg')"></div><div class="body"><span class="tag">HORROR</span><h3>Amnesia: The Bunker</h3><div class="price">$14.99</div><a class="btn buy" href="buy.html?game=Amnesia%3A%20The%20Bunker&price=14.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Amnesia: The Bunker" data-price="14.99">ADD TO CART</button><button class="btn buy cartBtn" data-game="Amnesia: The Bunker" data-price="14.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/424840/header.jpg')"></div><div class="body"><span class="tag">HORROR</span><h3>Little Nightmares</h3><div class="price">$9.99</div><a class="btn buy" href="buy.html?game=Little%20Nightmares&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Little Nightmares" data-price="9.99">ADD TO CART</button><button class="btn buy cartBtn" data-game="Little Nightmares" data-price="9.99">ADD TO CART</button></div></article>
+</div></section>
+
+<section class="section" id="action"><div class="sectionhead"><div><h2>💥 Action</h2><p class="muted">Fast-paced action favorites.</p></div></div>
+<div class="grid">
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/1938090/header.jpg')"></div><div class="body"><span class="tag">ACTION</span><h3>Call of Duty: Black Ops 6</h3><div class="price">$24.99</div><a class="btn buy" href="buy.html?game=Game%20Listing&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Game Listing" data-price="9.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=85')"></div><div class="body"><span class="tag">ACTION</span><h3>Action Game Listing</h3><div class="price">$12.99</div><a class="btn buy" href="buy.html?game=Game%20Listing&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Game Listing" data-price="9.99">ADD TO CART</button></div></article>
+</div></section>
+
+
+<section class="section" id="sport"><div class="sectionhead"><div><h2>⚽ Sports & 2K</h2><p class="muted">Football and basketball favorites.</p></div></div>
+<div class="grid">
+<article class="card"><div class="cover" style="background-image:url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=900&q=85')"></div><div class="body"><span class="tag">FIFA / EA SPORTS</span><h3>EA SPORTS FC 24</h3><div class="price">$14.99</div><a class="btn buy" href="buy.html?game=EA%20SPORTS%20FC%2024&price=14.99">BUY NOW</a><button class="btn buy cartBtn" data-game="EA SPORTS FC 24" data-price="14.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=900&q=85')"></div><div class="body"><span class="tag">FIFA / EA SPORTS</span><h3>EA SPORTS FC 25</h3><div class="price">$19.99</div><a class="btn buy" href="buy.html?game=EA%20SPORTS%20FC%2025&price=19.99">BUY NOW</a><button class="btn buy cartBtn" data-game="EA SPORTS FC 25" data-price="19.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=900&q=85')"></div><div class="body"><span class="tag">FIFA / EA SPORTS</span><h3>EA SPORTS FC 26</h3><div class="price">$29.99</div><a class="btn buy" href="buy.html?game=EA%20SPORTS%20FC%2026&price=29.99">BUY NOW</a><button class="btn buy cartBtn" data-game="EA SPORTS FC 26" data-price="29.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=900&q=85')"></div><div class="body"><span class="tag">FIFA / EA SPORTS</span><h3>EA SPORTS FC 27</h3><div class="price">$39.99</div><a class="btn buy" href="buy.html?game=EA%20SPORTS%20FC%2027&price=39.99">BUY NOW</a><button class="btn buy cartBtn" data-game="EA SPORTS FC 27" data-price="39.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=900&q=85')"></div><div class="body"><span class="tag">2K SPORTS</span><h3>NBA 2K</h3><div class="price">$24.99</div><a class="btn buy" href="buy.html?game=NBA%202K&price=24.99">BUY NOW</a><button class="btn buy cartBtn" data-game="NBA 2K" data-price="24.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=900&q=85')"></div><div class="body"><span class="tag">2K SPORTS</span><h3>NBA 2K — New Release</h3><div class="price">$39.99</div><a class="btn buy" href="buy.html?game=NBA%202K%20New%20Release&price=39.99">BUY NOW</a><button class="btn buy cartBtn" data-game="NBA 2K New Release" data-price="39.99">ADD TO CART</button></div></article>
+</div></section>
+
+<section class="section" id="survival-extra"><div class="sectionhead"><div><h2>🏕️ More Survival</h2><p class="muted">More worlds to build and survive.</p></div></div>
+<div class="grid">
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/346110/header.jpg')"></div><div class="body"><span class="tag">SURVIVAL</span><h3>ARK: Survival Evolved</h3><div class="price">$14.99</div><a class="btn buy" href="buy.html?game=ARK%20Survival%20Evolved&price=14.99">BUY NOW</a><button class="btn buy cartBtn" data-game="ARK Survival Evolved" data-price="14.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg')"></div><div class="body"><span class="tag">SURVIVAL</span><h3>Palworld</h3><div class="price">$19.99</div><a class="btn buy" href="buy.html?game=Palworld&price=19.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Palworld" data-price="19.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/105600/header.jpg')"></div><div class="body"><span class="tag">SURVIVAL</span><h3>Terraria</h3><div class="price">$9.99</div><a class="btn buy" href="buy.html?game=Terraria&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Terraria" data-price="9.99">ADD TO CART</button></div></article>
+<article class="card"><div class="cover" style="background-image:url('https://cdn.akamai.steamstatic.com/steam/apps/413150/header.jpg')"></div><div class="body"><span class="tag">COZY SURVIVAL</span><h3>Stardew Valley</h3><div class="price">$9.99</div><a class="btn buy" href="buy.html?game=Stardew%20Valley&price=9.99">BUY NOW</a><button class="btn buy cartBtn" data-game="Stardew Valley" data-price="9.99">ADD TO CART</button></div></article>
+</div></section>
+<section class="section" id="services"><div class="sectionhead"><div><h2>🛠️ Gaming Services</h2><p class="muted">Help for your gaming setup.</p></div></div>
+<div class="grid">
+<div class="card service"><div class="icon">🧰</div><h3>Fix Game Errors</h3><p class="muted">Troubleshoot crashes, launch problems and common PC gaming issues.</p></div>
+<div class="card service"><div class="icon">🖥️</div><h3>PC Gaming Setup</h3><p class="muted">Help with settings, controllers, peripherals and configuration.</p></div>
+<div class="card service"><div class="icon">🎯</div><h3>Gaming Coaching</h3><p class="muted">Gameplay guidance where the game's rules allow it.</p></div>
+<div class="card service"><div class="icon">💬</div><h3>Player Support</h3><p class="muted">Contact Minfet Game Hub with your gaming question.</p></div>
+</div></section>
+
+
+<section class="section"><div class="account">
+<h2>🎁 Digital Deals & Gaming Services</h2>
+<p class="muted">Looking for a random digital deal? Choose from authorized game products, gift cards, or gaming services.</p>
+<p><b>Steam accounts:</b> Steam accounts are personal and Steam's Subscriber Agreement prohibits selling or transferring them, so Minfet Game Hub does not list Steam account sales.</p>
+<a class="btn" href="#support">ASK FOR A DEAL</a>
+</div></section>
+
+
+<section class="section" id="support"><div class="sectionhead"><div><h2>💳 Payment & Support</h2><p class="muted">Contact Minfet Game Hub to arrange an authorized purchase.</p></div></div>
+<div class="contact">
+<div class="box"><h3>PayPal</h3><p class="muted">A real PayPal checkout needs to be connected to a PayPal business/merchant account. The button below is a design placeholder until the correct PayPal checkout link or integration is provided.</p><a class="paypal" href="#" onclick="alert('PayPal checkout needs to be connected to the store owner’s PayPal account.');return false;">Pay with PayPal</a></div>
+<div class="box"><h3>Contact Minfet Game Hub</h3><p>📧 <span class="email">mohammedelmadkory75@gmail.com</span></p><p>🎮 Discord: <span class="discord">minfet111zd6983</span></p><a class="btn" href="mailto:mohammedelmadkory75@gmail.com">EMAIL US</a></div>
+</div></section>
+
+
+<section class="section"><div class="account">
+<h2>🎁 Digital Account & Gift Card Services</h2>
+<p class="muted">You can list authorized gift cards, game keys, or gaming services here.</p>
+<p><b>Steam accounts are not listed for sale:</b> Steam's rules prohibit selling or transferring Steam accounts.</p>
+<a class="btn" href="#support">ASK ABOUT AUTHORIZED DIGITAL PRODUCTS</a>
+</div></section>
+
+<div class="notice"><b>Store note:</b> Replace example prices and listings with products you are authorized to sell, and use properly licensed/authorized images for game artwork.</div>
+</main>
+<footer>© 2026 Minfet Game Hub · Games & Gaming Support</footer>
+
+<script>
+function searchGames(){
+  const input=document.getElementById('gameSearch');
+  const query=(input.value||'').trim().toLowerCase();
+  const cards=[...document.querySelectorAll('.card')];
+  let found=0;
+
+  cards.forEach(card=>{
+    const title=card.querySelector('h3');
+    if(!title) return;
+    const text=(title.textContent+' '+card.textContent).toLowerCase();
+    const match=!query || text.includes(query);
+    card.style.display=match?'':'none';
+    if(match && query) found++;
+  });
+
+  // Hide empty game sections while searching.
+  document.querySelectorAll('.section').forEach(section=>{
+    if(!section.querySelector('.card')) return;
+    const visible=[...section.querySelectorAll('.card')].some(c=>c.style.display!=='none');
+    section.style.display=(!query || visible)?'':'none';
+  });
+
+  const noResults=document.getElementById('noResults');
+  if(noResults) noResults.style.display=(query && found===0)?'block':'none';
+}
+
+document.getElementById('gameSearch')?.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    e.target.value='';
+    searchGames();
+  }
+});
+</script>
+
+
+<script>
+const cart=[];
+function renderCart(){
+  const items=document.getElementById('cartItems'), count=document.getElementById('cartCount'), total=document.getElementById('cartTotal');
+  count.textContent=cart.length;
+  if(!cart.length){items.innerHTML='<p class="muted">Your cart is empty.</p>';total.textContent='0.00';return;}
+  items.innerHTML=cart.map((x,i)=>`<div class="cartItem"><span>${x.game}</span><b>$${x.price.toFixed(2)} <button onclick="removeCart(${i})" style="margin-left:5px;background:none;color:#ff8d8d;border:0;cursor:pointer">✕</button></b></div>`).join('');
+  const sum=cart.reduce((a,x)=>a+x.price,0);
+  total.textContent=sum.toFixed(2);
+}
+function removeCart(i){cart.splice(i,1);renderCart();}
+document.querySelectorAll('.cartBtn').forEach(btn=>btn.addEventListener('click',()=>{
+  cart.push({game:btn.dataset.game,price:Number(btn.dataset.price)});
+  renderCart();
+  document.getElementById('cartDrawer').classList.add('show');
+}));
+document.getElementById('cartToggle')?.addEventListener('click',()=>document.getElementById('cartDrawer').classList.toggle('show'));
+renderCart();
+</script>
+
+<script>
+(function(){
+ const cart=[];
+ const drawer=document.getElementById('cartDrawer');
+ const items=document.getElementById('cartItems');
+ const count=document.getElementById('cartCount');
+ const total=document.getElementById('cartTotal');
+ const checkout=document.getElementById('cartCheckout');
+
+ function render(){
+   if(!items) return;
+   count.textContent=cart.length;
+   if(!cart.length){
+     items.innerHTML='<p class="muted">Your cart is empty.</p>';
+     total.textContent='0.00';
+     checkout.href='buy.html';
+     return;
+   }
+   items.innerHTML=cart.map((x,i)=>'<div class="cartItem"><span>'+x.game+'</span><b>$'+x.price.toFixed(2)+' <button onclick="removeCart('+i+')" style="background:none;color:#ff8d8d;border:0;cursor:pointer">✕</button></b></div>').join('');
+   const sum=cart.reduce((a,x)=>a+x.price,0);
+   total.textContent=sum.toFixed(2);
+   const qs=new URLSearchParams();
+   qs.set('items',cart.map(x=>x.game).join('|'));
+   qs.set('total',sum.toFixed(2));
+   checkout.href='buy.html?'+qs.toString();
+ }
+ window.removeCart=function(i){cart.splice(i,1);render();};
+ document.querySelectorAll('.cartBtn').forEach(btn=>btn.addEventListener('click',function(){
+   cart.push({game:this.dataset.game,price:Number(this.dataset.price)});
+   render();
+   if(drawer) drawer.classList.add('show');
+ }));
+ document.getElementById('cartToggle')?.addEventListener('click',()=>drawer?.classList.toggle('show'));
+ render();
+})();
+</script>
+</body>
+</html>

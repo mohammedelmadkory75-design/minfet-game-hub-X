@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Minfet Game Hub — Checkout</title>
+<style>
+body{margin:0;background:#070a12;color:#f7f9ff;font-family:Arial,sans-serif}.wrap{max-width:700px;margin:60px auto;padding:20px}
+.box{background:#101a2a;border:1px solid #293b5b;border-radius:20px;padding:30px}h1{margin-top:0}.muted{color:#9aa8bd}.price{font-size:32px;font-weight:900;margin:20px 0}.paypal{display:block;text-align:center;background:#ffc439;color:#111;padding:15px;border-radius:10px;font-weight:900;text-decoration:none;margin-top:20px}.back{display:inline-block;color:#65ddff;margin-top:20px}
+</style></head><body><div class="wrap"><div class="box">
+<h1>🎮 Minfet Game Hub Checkout</h1>
+<p class="muted">You're buying:</p><h2 id="game">Game</h2><div id="itemsList" class="muted"></div><div class="price">$<span id="price">0.00</span></div>
+<p class="muted">For real PayPal checkout, replace the button link below with your PayPal Business checkout/payment link. Do not put your PayPal password or secret credentials in this file.</p>
+<a class="paypal" id="paypal" href="#" onclick="alert('A parent/guardian should connect the store's authorized PayPal checkout here before accepting payments.');return false;">Pay with PayPal</a>
+<a class="back" href="index.html">← Back to Minfet Game Hub</a>
+</div></div>
+<script>
+const p=new URLSearchParams(location.search);
+const items=p.get('items');
+const game=p.get('game')||'Game';
+const total=p.get('total')||p.get('price')||'0.00';
+document.getElementById('game').textContent=items?'Your selected games':'Game';
+document.getElementById('itemsList').textContent=items?items.split('|').join(' • '):'';
+document.getElementById('price').textContent=total;
+</script></body></html>

@@ -26,7 +26,26 @@ a{text-decoration:none;color:inherit}.nav{position:sticky;top:0;z-index:50;backg
   <img src="logo.png" alt="Minfet Game Hub Logo">
 </div>
 <input id="gameSearch" class="search" placeholder="🔎 Search games..." autocomplete="off" oninput="searchGames()">
-<div class="links"><a href="#openworld">Games</a><a href="#services">Services</a><a href="#support">Support</a><button id="cartToggle" style="background:#111b2b;color:#fff;border:1px solid #2b3c5b;border-radius:10px;padding:9px 12px;font-weight:900;cursor:pointer">🛒 Cart (<span id="cartCount">0</span>)</button></div>
+<div class="links">
+  <a href="#openworld">Games</a>
+  <a href="#services">Services</a>
+  <a href="#support">Support</a>
+  <button id="cartToggle" style="background:#111b2b;color:#fff;border:1px solid #2b3e5d;border-radius:10px;padding:9px 12px;font-weight:900;cursor:pointer">Cart</button>
+  <button id="authBtn" onclick="openAuthModal()" style="background:#4388ff;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-left:8px;">Sign In</button>
+  <button id="deleteAccountBtn" onclick="deleteAccount()" style="display:none;background:#ff4d4d;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-left:5px;">Delete Account</button>
+</div>
+  <div id="authModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;justify-content:center;align-items:center;">
+  <div style="background:#0d1422;border:1px solid #2b3e5d;padding:30px;border-radius:12px;width:300px;color:#fff;">
+    <h2 id="modalTitle" style="margin-top:0;">Sign In</h2>
+    <input type="text" id="authUsername" placeholder="Username" style="width:100%;margin:10px 0;padding:8px;background:#111b2b;border:1px solid #2b3e5d;color:#fff;border-radius:6px;">
+    <input type="password" id="authPassword" placeholder="Password" style="width:100%;margin:10px 0;padding:8px;background:#111b2b;border:1px solid #2b3e5d;color:#fff;border-radius:6px;">
+    <button id="submitAuthBtn" onclick="handleAuth()" style="width:100%;padding:10px;background:#4388ff;color:#fff;border:none;border-radius:6px;cursor:pointer;">Sign In</button>
+    <p style="margin-top:15px;font-size:12px;cursor:pointer;color:#9aa8bd;text-align:center;" onclick="toggleAuthMode()">
+      <span id="toggleText">Need an account? Sign Up</span>
+    </p>
+    <button onclick="closeAuthModal()" style="width:100%;margin-top:10px;background:transparent;color:#888;border:none;cursor:pointer;">Cancel</button>
+  </div>
+</div>
 </nav></header>
 
 
@@ -226,4 +245,94 @@ renderCart();
 })();
 </script>
 </body>
+  <script>
+let isSignUpMode = false;
+
+function openAuthModal() {
+  document.getElementById('authModal').style.display = 'flex';
+}
+
+function closeAuthModal() {
+  document.getElementById('authModal').style.display = 'none';
+}
+
+function toggleAuthMode() {
+  isSignUpMode = !isSignUpMode;
+  document.getElementById('modalTitle').innerText = isSignUpMode ? "Sign Up" : "Sign In";
+  document.getElementById('submitAuthBtn').innerText = isSignUpMode ? "Sign Up" : "Sign In";
+  document.getElementById('toggleText').innerText = isSignUpMode ? "Already have an account? Sign In" : "Need an account? Sign Up";
+}
+
+function handleAuth() {
+  const username = document.getElementById('authUsername').value.trim();
+  const password = document.getElementById('authPassword').value.trim();
+
+  if (!username || !password) {
+    alert("Please enter both username and password.");
+    return;
+  }
+
+  let users = JSON.parse(localStorage.getItem('users')) || {};
+
+  if (isSignUpMode) {
+    if (users[username]) {
+      alert("Username already exists!");
+      return;
+    }
+    users[username] = password;
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('currentUser', username);
+    alert("Account created successfully!");
+  } else {
+    if (!users[username] || users[username] !== password) {
+      alert("Invalid username or password!");
+      return;
+    }
+    localStorage.setItem('currentUser', username);
+    alert("Logged in successfully!");
+  }
+
+  closeAuthModal();
+  checkAuthState();
+}
+
+function deleteAccount() {
+  const currentUser = localStorage.getItem('currentUser');
+  if (!currentUser) return;
+
+  if (confirm(`Are you sure you want to delete account "${currentUser}"?`)) {
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    delete users[currentUser];
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.removeItem('currentUser');
+    
+    alert("Account deleted.");
+    checkAuthState();
+  }
+}
+
+function checkAuthState() {
+  const currentUser = localStorage.getItem('currentUser');
+  const authBtn = document.getElementById('authBtn');
+  const deleteBtn = document.getElementById('deleteAccountBtn');
+
+  if (currentUser) {
+    authBtn.innerText = `Sign Out (${currentUser})`;
+    authBtn.onclick = logout;
+    deleteBtn.style.display = 'inline-block';
+  } else {
+    authBtn.innerText = "Sign In";
+    authBtn.onclick = openAuthModal;
+    deleteBtn.style.display = 'none';
+  }
+}
+
+function logout() {
+  localStorage.removeItem('currentUser');
+  checkAuthState();
+}
+
+// Run status check when page loads
+checkAuthState();
+</script>
 </html>

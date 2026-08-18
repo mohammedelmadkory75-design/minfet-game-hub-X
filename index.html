@@ -440,3 +440,83 @@ function logout() {
 checkAuthState();
 </script>
 </html>
+<!-- Firebase Web App SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBqS-xlgKh0s6Sz0md2WNYMFwkLFuTL1wI",
+  authDomain: "minfet-game-hub-x.firebaseapp.com",
+  projectId: "minfet-game-hub-x",
+  storageBucket: "minfet-game-hub-x.firebasestorage.app",
+  messagingSenderId: "1059237712001",
+  appId: "1:1059237712001:web:2f382f013f5be9f12d7d80",
+  measurementId: "G-6J8XM3GYVG"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+let isSignUpMode = false;
+
+function openAuthModal() { document.getElementById('authModal').style.display = 'flex'; }
+function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+function openProfileModal() { document.getElementById('profileModal').style.display = 'flex'; }
+function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
+
+function toggleAuthMode() {
+  isSignUpMode = !isSignUpMode;
+  document.getElementById('modalTitle').innerText = isSignUpMode ? "Sign Up" : "Sign In";
+  document.getElementById('toggleText').innerText = isSignUpMode ? "Already have an account? Sign In" : "Need an account? Sign Up";
+}
+
+function handleGoogleSignIn() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).then(() => closeAuthModal()).catch(err => alert(err.message));
+}
+
+function handleEmailAuth() {
+  const email = document.getElementById('authEmail').value;
+  const password = document.getElementById('authPassword').value;
+  if (isSignUpMode) {
+    auth.createUserWithEmailAndPassword(email, password).then(() => closeAuthModal()).catch(err => alert(err.message));
+  } else {
+    auth.signInWithEmailAndPassword(email, password).then(() => closeAuthModal()).catch(err => alert(err.message));
+  }
+}
+
+function updateProfileName() {
+  const newName = document.getElementById('updateDisplayName').value;
+  if (auth.currentUser) {
+    auth.currentUser.updateProfile({ displayName: newName }).then(() => alert("Name updated!")).catch(err => alert(err.message));
+  }
+}
+
+function sendPasswordReset() {
+  if (auth.currentUser && auth.currentUser.email) {
+    auth.sendPasswordResetEmail(auth.currentUser.email).then(() => alert("Password reset email sent!")).catch(err => alert(err.message));
+  }
+}
+
+function deleteAccount() {
+  if (confirm("Are you sure you want to delete your account?")) {
+    auth.currentUser.delete().then(() => { alert("Account deleted."); closeProfileModal(); }).catch(err => alert(err.message));
+  }
+}
+
+function logout() { auth.signOut().then(() => closeProfileModal()); }
+
+auth.onAuthStateChanged((user) => {
+  const authBtn = document.getElementById('authBtn');
+  const profileBtn = document.getElementById('profileBtn');
+  if (user) {
+    authBtn.style.display = 'none';
+    profileBtn.style.display = 'inline-block';
+    profileBtn.innerText = user.displayName || user.email.split('@')[0];
+    document.getElementById('userEmailDisplay').innerText = user.email;
+  } else {
+    authBtn.style.display = 'inline-block';
+    profileBtn.style.display = 'none';
+  }
+});
+</script>

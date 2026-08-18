@@ -26,23 +26,50 @@ a{text-decoration:none;color:inherit}.nav{position:sticky;top:0;z-index:50;backg
   <img src="logo.png" alt="Minfet Game Hub Logo">
 </div>
 <input id="gameSearch" class="search" placeholder="🔎 Search games..." autocomplete="off" oninput="searchGames()">
-<div class="links">
-  <a href="#openworld">Games</a>
-  <a href="#services">Services</a>
-  <a href="#support">Support</a>
-  <button id="cartToggle" style="background:#111b2b;color:#fff;border:1px solid #2b3e5d;border-radius:10px;padding:9px 12px;font-weight:900;cursor:pointer">Cart</button>
-  <button id="authBtn" onclick="openAuthModal()" style="background:#4388ff;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-left:8px;">Sign In</button>
-  <button id="deleteAccountBtn" onclick="deleteAccount()" style="display:none;background:#ff4d4d;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-left:5px;">Delete Account</button>
-</div>
-  <div id="authModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;justify-content:center;align-items:center;">
-  <div style="background:#0d1422;border:1px solid #2b3e5d;padding:30px;border-radius:12px;width:300px;color:#fff;">
+<div class="logo">
+      <img src="logo.png" alt="Minfet Game Hub Logo" style="height:40px; width:auto; vertical-align:middle;">
+    </div>
+    <input id="gamesearch" class="search" placeholder="🔍 Search games..." autocomplete="off" oninput="searchGames()">
+    <div class="links">
+      <a href="#openworld">Games</a>
+      <a href="#services">Services</a>
+      <a href="#support">Support</a>
+      <button id="cartToggle" style="background:#111b2b;color:#fff;border:1px solid #2b3e5d;border-radius:10px;padding:9px 12px;font-weight:900;cursor:pointer">Cart</button>
+      <button id="authBtn" onclick="openAuthModal()" style="background:#4388ff;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-left:8px;">Sign In</button>
+      <button id="profileBtn" onclick="openProfileModal()" style="display:none;background:#2b3e5d;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-left:5px;">Profile</button>
+    </div>
+  </nav>
+</header>
+
+<!-- Auth Modal (Email & Google Sign-In) -->
+<div id="authModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center;">
+  <div style="background:#0d1422; border:1px solid #2b3e5d; padding:30px; border-radius:12px; width:300px; color:#fff;">
     <h2 id="modalTitle" style="margin-top:0;">Sign In</h2>
-    <input type="text" id="authUsername" placeholder="Username" style="width:100%;margin:10px 0;padding:8px;background:#111b2b;border:1px solid #2b3e5d;color:#fff;border-radius:6px;">
-    <input type="password" id="authPassword" placeholder="Password" style="width:100%;margin:10px 0;padding:8px;background:#111b2b;border:1px solid #2b3e5d;color:#fff;border-radius:6px;">
-    <button id="submitAuthBtn" onclick="handleAuth()" style="width:100%;padding:10px;background:#4388ff;color:#fff;border:none;border-radius:6px;cursor:pointer;">Sign In</button>
-    <p style="margin-top:15px;font-size:12px;cursor:pointer;color:#9aa8bd;text-align:center;" onclick="toggleAuthMode()">
+    <input type="email" id="authEmail" placeholder="Email" style="width:100%; margin:8px 0; padding:8px; background:#111b2b; border:1px solid #2b3e5d; color:#fff; border-radius:6px;">
+    <input type="password" id="authPassword" placeholder="Password" style="width:100%; margin:8px 0; padding:8px; background:#111b2b; border:1px solid #2b3e5d; color:#fff; border-radius:6px;">
+    <button onclick="handleEmailAuth()" style="width:100%; padding:10px; background:#4388ff; color:#fff; border:none; border-radius:6px; cursor:pointer; margin-top:5px;">Sign In with Email</button>
+    <button onclick="handleGoogleSignIn()" style="width:100%; padding:10px; background:#ea4335; color:#fff; border:none; border-radius:6px; cursor:pointer; margin-top:8px;">Sign In with Google</button>
+    <p style="margin-top:15px; font-size:12px; cursor:pointer; color:#9aa8bd; text-align:center;" onclick="toggleAuthMode()">
       <span id="toggleText">Need an account? Sign Up</span>
     </p>
+    <button onclick="closeAuthModal()" style="width:100%; background:transparent; color:#888; border:none; cursor:pointer;">Cancel</button>
+  </div>
+</div>
+
+<!-- Profile & Settings Modal -->
+<div id="profileModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center;">
+  <div style="background:#0d1422; border:1px solid #2b3e5d; padding:30px; border-radius:12px; width:320px; color:#fff;">
+    <h2 style="margin-top:0;">Profile Settings</h2>
+    <p style="font-size:13px; color:#9aa8bd;">Email: <b id="userEmailDisplay" style="color:#fff;"></b></p>
+    <input type="text" id="updateDisplayName" placeholder="New Display Name" style="width:100%; margin:5px 0 10px 0; padding:8px; background:#111b2b; border:1px solid #2b3e5d; color:#fff; border-radius:6px;">
+    <button onclick="updateProfileName()" style="width:100%; padding:8px; background:#2b3e5d; color:#fff; border:none; border-radius:6px; cursor:pointer;">Update Name</button>
+    <hr style="border-color:#2b3e5d; margin:15px 0;">
+    <button onclick="sendPasswordReset()" style="width:100%; padding:8px; background:#2b3e5d; color:#fff; border:none; border-radius:6px; cursor:pointer;">Send Password Reset Email</button>
+    <button onclick="deleteAccount()" style="width:100%; padding:8px; background:#ff4d4d; color:#fff; border:none; border-radius:6px; cursor:pointer; margin-top:8px;">Delete Account</button>
+    <button onclick="logout()" style="width:100%; padding:8px; background:transparent; color:#aaa; border:none; cursor:pointer; margin-top:8px;">Sign Out</button>
+    <button onclick="closeProfileModal()" style="width:100%; color:#888; border:none; background:transparent; cursor:pointer; margin-top:5px;">Close</button>
+  </div>
+</div>
     <button onclick="closeAuthModal()" style="width:100%;margin-top:10px;background:transparent;color:#888;border:none;cursor:pointer;">Cancel</button>
   </div>
 </div>
@@ -244,7 +271,85 @@ renderCart();
  render();
 })();
 </script>
-</body>
+</body><script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<script>
+// Replace this with your actual Firebase Keys
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+let isSignUpMode = false;
+
+function openAuthModal() { document.getElementById('authModal').style.display = 'flex'; }
+function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+function openProfileModal() { document.getElementById('profileModal').style.display = 'flex'; }
+function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
+
+function toggleAuthMode() {
+  isSignUpMode = !isSignUpMode;
+  document.getElementById('modalTitle').innerText = isSignUpMode ? "Sign Up" : "Sign In";
+  document.getElementById('toggleText').innerText = isSignUpMode ? "Already have an account? Sign In" : "Need an account? Sign Up";
+}
+
+function handleGoogleSignIn() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).then(() => closeAuthModal()).catch(err => alert(err.message));
+}
+
+function handleEmailAuth() {
+  const email = document.getElementById('authEmail').value;
+  const password = document.getElementById('authPassword').value;
+  if (isSignUpMode) {
+    auth.createUserWithEmailAndPassword(email, password).then(() => closeAuthModal()).catch(err => alert(err.message));
+  } else {
+    auth.signInWithEmailAndPassword(email, password).then(() => closeAuthModal()).catch(err => alert(err.message));
+  }
+}
+
+function updateProfileName() {
+  const newName = document.getElementById('updateDisplayName').value;
+  if (auth.currentUser) {
+    auth.currentUser.updateProfile({ displayName: newName }).then(() => alert("Name updated!")).catch(err => alert(err.message));
+  }
+}
+
+function sendPasswordReset() {
+  if (auth.currentUser && auth.currentUser.email) {
+    auth.sendPasswordResetEmail(auth.currentUser.email).then(() => alert("Password reset email sent!")).catch(err => alert(err.message));
+  }
+}
+
+function deleteAccount() {
+  if (confirm("Are you sure you want to delete your account?")) {
+    auth.currentUser.delete().then(() => { alert("Account deleted."); closeProfileModal(); }).catch(err => alert(err.message));
+  }
+}
+
+function logout() { auth.signOut().then(() => closeProfileModal()); }
+
+auth.onAuthStateChanged((user) => {
+  const authBtn = document.getElementById('authBtn');
+  const profileBtn = document.getElementById('profileBtn');
+  if (user) {
+    authBtn.style.display = 'none';
+    profileBtn.style.display = 'inline-block';
+    profileBtn.innerText = user.displayName || user.email.split('@')[0];
+    document.getElementById('userEmailDisplay').innerText = user.email;
+  } else {
+    authBtn.style.display = 'inline-block';
+    profileBtn.style.display = 'none';
+  }
+});
+</script>
   <script>
 let isSignUpMode = false;
 
@@ -330,9 +435,8 @@ function checkAuthState() {
 function logout() {
   localStorage.removeItem('currentUser');
   checkAuthState();
-}
 
-// Run status check when page loads
+    
 checkAuthState();
 </script>
 </html>

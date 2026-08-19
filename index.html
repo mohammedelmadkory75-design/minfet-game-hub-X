@@ -277,7 +277,7 @@ renderCart();
 <script>
 // Replace this with your actual Firebase Keys
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+   apiKey: "AIzaSyAJM9Rpkx9JvTavADhkFe8LKRj1LmcHdbk"
   authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
   projectId: "YOUR_PROJECT_ID",
   storageBucket: "YOUR_PROJECT_ID.appspot.com",
@@ -351,6 +351,20 @@ auth.onAuthStateChanged((user) => {
 });
 </script>
   <script>
+    // Function to check if user is logged in before buying a game
+function handleBuyGame(gameName) {
+  const user = auth.currentUser;
+
+  if (!user) {
+    // If NOT logged in -> Show message & open login box
+    alert("Please sign in or create an account to buy " + gameName + "!");
+    openAuthModal();
+  } else {
+    // If logged in -> Proceed
+    alert("Welcome " + (user.displayName || user.email) + "! Proceeding to buy " + gameName + "...");
+    // Put your checkout or download link here
+  }
+}
 let isSignUpMode = false;
 
 function openAuthModal() {
